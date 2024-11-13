@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product List</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="store.js"></script> 
+</head>
+<body>
+    <div class="container">
+     
+        <div id="loading" style="display: none;">Loading...</div>
+
+      
+        <div id="productList" style="display: none;">
+            <div id="categoryFilters"></div>
+            <div id="products"></div>
+        </div>
+
+    
+<div class="search-container" style="display: none;">
+    <label for="productID">Enter Product ID:</label>
+    <input type="text" id="productID" placeholder="Enter a product ID (1-20)">
+    <p id="errorMessage"></p>
+    <div id="productInfo"></div>
+</div>
+
+    </div>
+</body>
+</html>
