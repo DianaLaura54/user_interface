@@ -26,34 +26,34 @@ class ProductAdapter(private val context: Context, private val products: List<Pr
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        // Inflate the item_product.xml layout for each row
+
         val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.product_item, parent, false)
 
-        // Get the current product
+
         val product = getItem(position) as Product
 
-        // Set the product title
+
         val productTitle: TextView = view.findViewById(R.id.productTitle)
         productTitle.text = product.title
 
-        // Set the product price
+
         val productPrice: TextView = view.findViewById(R.id.productPrice)
         productPrice.text = "$${product.price}"
 
-        // Set the product description
+
         val productDescription: TextView = view.findViewById(R.id.productDescription)
         productDescription.text = product.description
 
-        // Set the product rating
-        val productRating: TextView = view.findViewById(R.id.productRating)
-        productRating.text = "Rating: ${product.rating}"
 
-        // Load the product image using Glide
+        val productRating: TextView = view.findViewById(R.id.productRating)
+
+        productRating.text = "Rating: ${product.rating.rate} (${product.rating.count} reviews)"
+
+
         val productImage: ImageView = view.findViewById(R.id.productImage)
         Glide.with(context)
             .load(product.image)
             .into(productImage)
-
 
         return view
     }

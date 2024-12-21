@@ -22,9 +22,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity() {
 
-    private var isLoggedIn = false  // Track if the user is logged in
+    private var isLoggedIn = false
 
-    // Retrofit setup
+
     val logging = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
     }
@@ -59,12 +59,12 @@ class MainActivity : AppCompatActivity() {
         val categoryImagesLayout: LinearLayout = findViewById(R.id.categoryImagesLayout)
         val logoutButton: Button = findViewById(R.id.logoutButton)
 
-        // New views for searching by product ID
+
         val productIdInput: EditText = findViewById(R.id.productIdInput)
         val productValidationMessage: TextView = findViewById(R.id.productValidationMessage)
         val productDetails: TextView = findViewById(R.id.productDetails)
 
-        // Initially hide the filter buttons, product list, and product ID input until the user is logged in
+
         filterMensClothing.isEnabled = false
         filterWomensClothing.isEnabled = false
         filterElectronics.isEnabled = false
@@ -72,9 +72,9 @@ class MainActivity : AppCompatActivity() {
         categoryImagesLayout.visibility = LinearLayout.GONE
         productListView.visibility = ListView.GONE
         logoutButton.visibility = Button.GONE
-        productIdInput.visibility = EditText.GONE  // Hide the product ID input initially
+        productIdInput.visibility = EditText.GONE
 
-        // TextWatcher to validate the fields in real-time
+
         val fieldValidator = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -87,7 +87,7 @@ class MainActivity : AppCompatActivity() {
         usernameField.addTextChangedListener(fieldValidator)
         passwordField.addTextChangedListener(fieldValidator)
 
-        // Handle login button click
+
         loginButton.setOnClickListener {
             val username = usernameField.text.toString()
             val password = passwordField.text.toString()
@@ -105,7 +105,7 @@ class MainActivity : AppCompatActivity() {
                     filterJewelry.isEnabled = true
                     categoryImagesLayout.visibility = LinearLayout.VISIBLE
                     logoutButton.visibility = Button.VISIBLE
-                    productIdInput.visibility = EditText.VISIBLE  // Show the product ID input after login
+                    productIdInput.visibility = EditText.VISIBLE
 
                     usernameField.visibility = EditText.GONE
                     passwordField.visibility = EditText.GONE
@@ -122,18 +122,24 @@ class MainActivity : AppCompatActivity() {
             passwordField.visibility = EditText.VISIBLE
             loginButton.visibility = Button.VISIBLE
 
+
             categoryImagesLayout.visibility = LinearLayout.GONE
             productListView.visibility = ListView.GONE
             logoutButton.visibility = Button.GONE
-            productIdInput.visibility = EditText.GONE  // Hide the product ID input again
+            productIdInput.visibility = EditText.GONE
 
-            // Reset product search-related UI
-            productIdInput.text.clear()  // Clear any entered product ID
-            productIdInput.setBackgroundColor(Color.WHITE)  // Reset the background color
-            productValidationMessage.visibility = TextView.GONE  // Hide validation message
-            productDetails.visibility = TextView.GONE  // Hide product details
+
+            productIdInput.text.clear()
+            productIdInput.setBackgroundColor(Color.WHITE)
+            productValidationMessage.visibility = TextView.GONE
+            productDetails.visibility = TextView.GONE
+
+
+            val imageView: ImageView? = findViewById(R.id.productImage)
+            imageView?.setImageDrawable(null)  // Clear the image
+
+            Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show()
         }
-
         filterMensClothing.setOnClickListener {
             fetchFilteredProducts("men's clothing", productListView, progressBar)
         }
@@ -147,25 +153,8 @@ class MainActivity : AppCompatActivity() {
             fetchFilteredProducts("jewelery", productListView, progressBar)
         }
 
-        // Add focus change listener for product ID input
-        productIdInput.setOnFocusChangeListener { _, hasFocus ->
-            if (!hasFocus) { // Validate when input loses focus
-                val productId = productIdInput.text.toString().toIntOrNull()
 
-                if (productId == null || productId <= 0 || productId > 20) {
-                    productIdInput.setBackgroundColor(Color.RED)
-                    productValidationMessage.text = "Invalid product ID. Enter a number between 1 and 20."
-                    productValidationMessage.visibility = TextView.VISIBLE
-                    productDetails.visibility = TextView.GONE
-                } else {
-                    productIdInput.setBackgroundColor(Color.GREEN)
-                    productValidationMessage.visibility = TextView.GONE
-                    fetchProductById(productId, productDetails)
-                }
-            }
-        }
 
-        // Add TextWatcher for real-time product ID validation and fetching
         productIdInput.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
@@ -231,20 +220,26 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun fetchFilteredProducts(category: String, listView: ListView, progressBar: ProgressBar) {
-        val productDetails: TextView = findViewById(R.id.productDetails) // Reference the product details view
+        val productDetails: TextView = findViewById(R.id.productDetails)
+        val productIdInput: EditText = findViewById(R.id.productIdInput)
 
         progressBar.visibility = ProgressBar.VISIBLE
         apiService.getAllProducts().enqueueWithLogging(
             onSuccess = { products ->
                 progressBar.visibility = ProgressBar.GONE
 
-                // Hide product details when applying a filter
-                productDetails.visibility = TextView.GONE
 
-                // Filter products and update the list
+                productDetails.visibility = TextView.GONE
+                productIdInput.setBackgroundColor(Color.WHITE)
+
+
                 val filteredProducts = products.filter { it.category == category }
-                listView.visibility = ListView.VISIBLE
-                updateProductList(listView, filteredProducts)
+                if (filteredProducts.isNotEmpty()) {
+                    listView.visibility = ListView.VISIBLE
+                    updateProductList(listView, filteredProducts)
+                } else {
+                    Toast.makeText(this, "No products found in this category", Toast.LENGTH_SHORT).show()
+                }
             },
             onError = { error ->
                 progressBar.visibility = ProgressBar.GONE
@@ -255,19 +250,31 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun fetchProductById(productId: Int, productDetails: TextView) {
-        val productListView: ListView = findViewById(R.id.productListView) // Reference the ListView
-        val imageView: ImageView? = findViewById(R.id.productImage) // Safely get the ImageView
 
-        // Hide the filtered product list
+    private fun fetchProductById(productId: Int, productDetails: TextView) {
+        val productListView: ListView = findViewById(R.id.productListView)
+        val imageView: ImageView? = findViewById(R.id.productImage)
+
+
         productListView.visibility = ListView.GONE
 
         apiService.getProductById(productId).enqueueWithLogging(
             onSuccess = { product ->
                 Log.d("FetchProductById", "Product fetched: ${product.title}")
+                Log.d("FetchProductById", "Image URL: ${product.image}")
 
-                // Display the product details
-                productDetails.text = """
+
+                imageView?.let {
+                    it.visibility = ImageView.VISIBLE
+                    it.setImageDrawable(null)
+                    Glide.with(this)
+                        .load(product.image)
+
+                        .into(it)
+                } ?: Log.e("FetchProductById", "ImageView is null")
+
+
+                val productInfo = """
                 Product: ${product.title}
                 Price: $${product.price}
                 Description: ${product.description}
@@ -275,13 +282,8 @@ class MainActivity : AppCompatActivity() {
                 Rating: ${product.rating.rate} (${product.rating.count} reviews)
             """.trimIndent()
 
-                // Load the image if the ImageView is not null
-                imageView?.let {
-                    Glide.with(this)
-                        .load(product.image)
-                       // Optional error placeholder
-                        .into(it)
-                } ?: Log.e("FetchProductById", "ImageView is null")
+                productDetails.text = productInfo
+
 
                 productDetails.visibility = TextView.VISIBLE
             },
@@ -291,5 +293,9 @@ class MainActivity : AppCompatActivity() {
             }
         )
     }
+
+
+
+
 
 }

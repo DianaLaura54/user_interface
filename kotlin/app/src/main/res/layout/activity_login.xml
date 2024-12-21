@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Login Fields -->
+
         <EditText
             android:id="@+id/usernameField"
             android:layout_width="match_parent"
@@ -34,7 +34,7 @@
             android:text="Login"
             android:layout_marginTop="16dp" />
 
-        <!-- ProgressBar for loading -->
+
         <ProgressBar
             android:id="@+id/loadingProgressBar"
             android:layout_width="wrap_content"
@@ -44,7 +44,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="16dp" />
 
-        <!-- Category Images Layout (Initially Hidden) -->
+
         <LinearLayout
             android:id="@+id/categoryImagesLayout"
             android:layout_width="match_parent"
@@ -52,7 +52,7 @@
             android:orientation="vertical"
             android:visibility="gone">
 
-            <!-- Category 1: Men's Clothing -->
+
             <ImageView
                 android:id="@+id/menCategoryImage"
                 android:layout_width="match_parent"
@@ -67,7 +67,7 @@
                 android:text="Filter Men's Clothing"
                 android:layout_marginTop="8dp" />
 
-            <!-- Category 2: Women's Clothing -->
+
             <ImageView
                 android:id="@+id/womenCategoryImage"
                 android:layout_width="match_parent"
@@ -82,7 +82,7 @@
                 android:text="Filter Women's Clothing"
                 android:layout_marginTop="8dp" />
 
-            <!-- Category 3: Electronics -->
+
             <ImageView
                 android:id="@+id/electronicsCategoryImage"
                 android:layout_width="match_parent"
@@ -97,7 +97,7 @@
                 android:text="Filter Electronics"
                 android:layout_marginTop="8dp" />
 
-            <!-- Category 4: Jewelry -->
+
             <ImageView
                 android:id="@+id/jewelryCategoryImage"
                 android:layout_width="match_parent"
@@ -112,7 +112,7 @@
                 android:text="Filter Jewelry"
                 android:layout_marginTop="8dp" />
 
-            <!-- Logout Button -->
+
             <Button
                 android:id="@+id/logoutButton"
                 android:layout_width="wrap_content"
@@ -122,7 +122,7 @@
                 android:visibility="gone" />
         </LinearLayout>
 
-        <!-- Product ID Search -->
+
         <EditText
             android:id="@+id/productIdInput"
             android:layout_width="match_parent"
@@ -132,7 +132,7 @@
             android:padding="8dp"
             android:layout_marginBottom="8dp" />
 
-        <!-- Product Validation Message -->
+
         <TextView
             android:id="@+id/productValidationMessage"
             android:layout_width="match_parent"
@@ -141,7 +141,7 @@
             android:visibility="gone"
             android:layout_marginBottom="8dp" />
 
-        <!-- Product Details -->
+
         <TextView
             android:id="@+id/productDetails"
             android:layout_width="match_parent"
@@ -150,7 +150,7 @@
             android:visibility="gone"
             android:textSize="16sp" />
 
-        <!-- Product List -->
+
         <ListView
             android:id="@+id/productListView"
             android:layout_width="match_parent"
